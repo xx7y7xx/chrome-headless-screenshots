@@ -35,12 +35,17 @@ async function init() {
     }
 
     // Extract used DevTools domains.
-    const {DOM, Emulation, Network, Page, Runtime} = client;
+    const { DOM, Emulation, Network, Page, Runtime, Log } = client;
 
     // Enable events on domains we are interested in.
     await Page.enable();
     await DOM.enable();
     await Network.enable();
+    await Log.enable();
+
+    Log.entryAdded(function ({ entry }) {
+      log('[REMOTE]', entry.text);
+    });
 
     // If user agent override was specified, pass to Network domain
     if (userAgent) {
