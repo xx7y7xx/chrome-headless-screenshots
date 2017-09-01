@@ -13,7 +13,7 @@
     "shot:FinancialData": "node index.js --url='https://acc.yonyoucloud.com/fireport/ReportServer?reportlet=%2Fyonyoufi%2Foas6lr3w%2FMFinancialData%2FMFinancialData_p.cpt&__showtoolbar__=false&aid=yonyoufi&tid=oas6lr3w&userid=521fa89e-886e-4d44-9014-eb53097872d1&referAppId=yonyoufi&tenantId=oas6lr3w&op=h5&accbook=D1C4A142-EC87-4BF0-BDD4-1FBD7D1D271A' --output=FinancialData.png --delay=5000",
     "shot:preview": "eog output/Dupont.png && eog output/ManagementStatus.png && eog output/TrendAnalysis.png && eog output/FinancialData.png",
     "crop:all": "node crop.js",
-    "crop:preview": "eog output/Dupont_new.png && eog output/ManagementStatus_new.png && eog output/TrendAnalysis_new.png && eog output/FinancialData_new.png",
+    "crop:preview": "eog output/Dupont_new.jpg && eog output/ManagementStatus_new.jpg && eog output/TrendAnalysis_new.jpg && eog output/FinancialData_new.jpg",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
