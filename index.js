@@ -13,7 +13,7 @@ const format = argv.format === 'jpeg' ? 'jpeg' : 'png';
 const viewportWidth = argv.viewportWidth || 1440;
 let viewportHeight = argv.viewportHeight || 900;
 const delay = argv.delay || 0;
-const userAgent = argv.userAgent;
+const userAgent = argv.userAgent || 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Mobile Safari/537.36';
 const fullPage = argv.full;
 const outputDir = argv.outputDir || './';
 const output = argv.output || `output.${format === 'png' ? 'png' : 'jpg'}`;
@@ -117,10 +117,10 @@ async function init() {
         const result = await Runtime.evaluate({expression: evaluationStr});
         log('login result:', result);
         log('wait for login and redirect:', delay);
-        await timeout(delay);
       } else {
         log('no, go on');
       }
+      await timeout(delay);
     }
 
     log('take snapshot');

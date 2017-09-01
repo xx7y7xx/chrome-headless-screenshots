@@ -4,8 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js --url='https://acc.yonyoucloud.com/m/shouye'  --delay=5000 --viewportWidth=412 --viewportHeight=732 --userAgent='Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Mobile Safari/537.36'",
-    "dupont": "node index.js --url='https://acc.yonyoucloud.com/fireport/ReportServer?reportlet=%2Fyonyoufi%2Foas6lr3w%2FMDupont%2FMDupont_p.cpt&__showtoolbar__=false&aid=yonyoufi&tid=oas6lr3w&userid=521fa89e-886e-4d44-9014-eb53097872d1&referAppId=yonyoufi&tenantId=oas6lr3w&op=h5&accbook=1574FCFD-89C8-4DFD-9E22-B281222D8C72'  --delay=5000 --viewportWidth=412 --viewportHeight=732 --userAgent='Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Mobile Safari/537.36' && eog output.png",
+    "start": "npm run build && npm run preview",
+    "build": "npm run Dupont && npm run ManagementStatus && npm run TrendAnalysis && npm run FinancialData",
+    "shouye": "node index.js --url='https://acc.yonyoucloud.com/m/shouye' --delay=5000 --viewportWidth=412 --viewportHeight=732 --output=shouye.png ",
+    "Dupont": "node index.js --url='https://acc.yonyoucloud.com/fireport/ReportServer?reportlet=%2Fyonyoufi%2Foas6lr3w%2FMDupont%2FMDupont_p.cpt&__showtoolbar__=false&aid=yonyoufi&tid=oas6lr3w&userid=521fa89e-886e-4d44-9014-eb53097872d1&referAppId=yonyoufi&tenantId=oas6lr3w&op=h5&accbook=1574FCFD-89C8-4DFD-9E22-B281222D8C72' --output=Dupont.png --delay=5000",
+    "ManagementStatus": "node index.js --url='https://acc.yonyoucloud.com/fireport/ReportServer?reportlet=%2Fyonyoufi%2Foas6lr3w%2FMManagementStatus%2FMManagementStatus_p.cpt&__showtoolbar__=false&aid=yonyoufi&tid=oas6lr3w&userid=521fa89e-886e-4d44-9014-eb53097872d1&referAppId=yonyoufi&tenantId=oas6lr3w&op=h5&accbook=D1C4A142-EC87-4BF0-BDD4-1FBD7D1D271A' --output=ManagementStatus.png --delay=5000",
+    "TrendAnalysis": "node index.js --url='https://acc.yonyoucloud.com/fireport/ReportServer?reportlet=%2Fyonyoufi%2Foas6lr3w%2FMTrendAnalysis%2FMTrendAnalysis_p.cpt&__showtoolbar__=false&aid=yonyoufi&tid=oas6lr3w&userid=521fa89e-886e-4d44-9014-eb53097872d1&referAppId=yonyoufi&tenantId=oas6lr3w&rptitem=lr013&op=h5&accbook=D1C4A142-EC87-4BF0-BDD4-1FBD7D1D271A' --output=TrendAnalysis.png --delay=5000",
+    "FinancialData": "node index.js --url='https://acc.yonyoucloud.com/fireport/ReportServer?reportlet=%2Fyonyoufi%2Foas6lr3w%2FMFinancialData%2FMFinancialData_p.cpt&__showtoolbar__=false&aid=yonyoufi&tid=oas6lr3w&userid=521fa89e-886e-4d44-9014-eb53097872d1&referAppId=yonyoufi&tenantId=oas6lr3w&op=h5&accbook=D1C4A142-EC87-4BF0-BDD4-1FBD7D1D271A' --output=FinancialData.png --delay=5000",
+    "preview": "eog Dupont.png && eog ManagementStatus.png && eog TrendAnalysis.png && eog FinancialData.png",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
