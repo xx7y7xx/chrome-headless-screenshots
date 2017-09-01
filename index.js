@@ -15,7 +15,7 @@ let viewportHeight = argv.viewportHeight || 900;
 const delay = argv.delay || 0;
 const userAgent = argv.userAgent || 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Mobile Safari/537.36';
 const fullPage = argv.full;
-const outputDir = argv.outputDir || './';
+const outputDir = argv.outputDir || './output/';
 const output = argv.output || `output.${format === 'png' ? 'png' : 'jpg'}`;
 
 init();
@@ -133,9 +133,9 @@ async function init() {
       }
     });
 
-    log('start saving snapshot');
     const buffer = new Buffer(screenshot.data, 'base64');
     const path = `${outputDir + output}`;
+    log('start saving snapshot:', path);
     await file.writeFile(path, buffer, 'base64');
     log('Screenshot saved');
     client.close();
