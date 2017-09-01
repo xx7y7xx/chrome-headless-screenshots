@@ -3,6 +3,10 @@ const argv = require('minimist')(process.argv.slice(2));
 const file = require('mz/fs');
 const timeout = require('delay');
 
+// username and password for login
+const passwd = require('./passwd');
+const log = require('./log');
+
 // CLI Args
 const url = argv.url || 'https://www.google.com';
 const format = argv.format === 'jpeg' ? 'jpeg' : 'png';
@@ -17,6 +21,7 @@ const output = argv.output || `output.${format === 'png' ? 'png' : 'jpg'}`;
 init();
 
 async function init() {
+  log('init');
   let client;
   try {
     // Start the Chrome Debugging Protocol
@@ -57,11 +62,13 @@ async function init() {
     });
 
     // Navigate to target page
+    log('Navigate to target page:', url)
     await Page.navigate({url});
 
     // Wait for page load event to take screenshot
     await Page.loadEventFired();
 
+    log('delay:', delay);
     await timeout(delay);
 
     // If the `full` CLI option was passed, we need to measure the height of
@@ -81,6 +88,37 @@ async function init() {
       await Emulation.forceViewport({x: 0, y: 0, scale: 1});
     }
 
+    if (1) {
+      // do login
+      // const {root: {nodeId: documentNodeId}} = await DOM.getDocument();
+      // const {nodeId: bodyNodeId} = await DOM.querySelector({
+      //   selector: 'input[id=username]',
+      //   nodeId: documentNodeId,
+      // });
+      // const {model} = await DOM.getBoxModel({nodeId: bodyNodeId});
+      async function getResult(evaluationStr) {
+        const { result } = await Runtime.evaluate({expression: evaluationStr});
+        return result;
+      }
+      log('need login?');
+      if ((await getResult('typeof doLogin')).value === 'function') {
+        log('yes, we are at login page');
+        log('input username and password, do login');
+        const evaluationStr = `
+          console.log('xxdebug');
+          document.querySelector('input[id=username]').value = '${passwd.username}';
+          document.querySelector('input[id=password]').value = '${passwd.password}';
+          doLogin();`
+        const result = await Runtime.evaluate({expression: evaluationStr});
+        log('login result:', result);
+        log('wait for login and redirect:', delay);
+        await timeout(delay);
+      } else {
+        log('no, go on');
+      }
+    }
+
+    log('take snapshot');
     const screenshot = await Page.captureScreenshot({
       format,
       fromSurface: true,
@@ -90,10 +128,11 @@ async function init() {
       }
     });
 
+    log('start saving snapshot');
     const buffer = new Buffer(screenshot.data, 'base64');
     const path = `${outputDir + output}`;
     await file.writeFile(path, buffer, 'base64');
-    console.log('Screenshot saved');
+    log('Screenshot saved');
     client.close();
   } catch (err) {
     if (client) {
