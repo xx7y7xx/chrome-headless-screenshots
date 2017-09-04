@@ -17,9 +17,9 @@ npm install --registry=https://registry.npm.taobao.org
 mkdir -p output
 npm run shot:all && npm run crop:all
 
-sync_files '10.3.14.3' '22' 'root' './output' \
+sync_files '10.3.14.3' '22' 'root' './output/' \
   '/data/ficloud/uiresources/fuck/static'
-sync_files '10.3.14.5' '22' 'root' './output' \
+sync_files '10.3.14.5' '22' 'root' './output/' \
   '/data/ficloud/uiresources/fuck/static'
 
 duration=$SECONDS
