@@ -73,8 +73,9 @@ async function init() {
     // Wait for page load event to take screenshot
     await Page.loadEventFired();
 
-    log('delay:', delay);
-    await timeout(delay);
+    log('delay: 2000');
+    // await timeout(delay);
+    await timeout(2000);
 
     // If the `full` CLI option was passed, we need to measure the height of
     // the rendered page and use Emulation.setVisibleSize
@@ -116,10 +117,12 @@ async function init() {
           doLogin();`
         const result = await Runtime.evaluate({expression: evaluationStr});
         log('login result:', result);
-        log('wait for login and redirect:', delay);
+        log('wait for login and redirect: 5000');
+        await timeout(5000);
       } else {
         log('no, go on');
       }
+      log('wait for page animation:', delay);
       await timeout(delay);
     }
 
