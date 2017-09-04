@@ -7,7 +7,7 @@ function crop(code) {
     if (err) throw err;
     image.autocrop(0.0003, false)
       // .resize(256, 256)
-      .write(`output/${code}_new.png`);
+      .write(`output/${code}_croped.png`);
   });
 }
 
