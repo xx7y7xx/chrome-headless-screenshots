@@ -16,6 +16,7 @@
     "shot:preview": "eog output/Dupont.png && eog output/ManagementStatus.png && eog output/TrendAnalysis.png && eog output/FinancialData.png",
     "crop:all": "node crop.js",
     "crop:preview": "eog output/Dupont_new.jpg && eog output/ManagementStatus_new.jpg && eog output/TrendAnalysis_new.jpg && eog output/FinancialData_new.jpg",
+    "snapshot": "npm run clean && node snapshot.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
