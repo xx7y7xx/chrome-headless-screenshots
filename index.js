@@ -1,3 +1,8 @@
+/**
+ * TODO 可以进行优化
+ * - 升级到更高层的API https://github.com/GoogleChrome/puppeteer
+ */
+
 const CDP = require('chrome-remote-interface');
 const argv = require('minimist')(process.argv.slice(2));
 const file = require('mz/fs');
