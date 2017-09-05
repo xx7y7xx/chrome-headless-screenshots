@@ -8,6 +8,8 @@ const argv = require('minimist')(process.argv.slice(2));
 const file = require('mz/fs');
 const timeout = require('delay');
 
+const crop = require('./crop');
+
 // username and password for login
 const passwd = require('./passwd');
 const log = require('./log');
@@ -18,6 +20,8 @@ const viewportWidth = argv.viewportWidth || 1440;
 const viewportHeight = argv.viewportHeight || 900;
 const userAgent = argv.userAgent || 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Mobile Safari/537.36';
 const outputDir = argv.outputDir || './output/';
+
+const shouyeUrl = 'https://acc.yonyoucloud.com/m/shouye';
 
 init();
 
@@ -67,8 +71,6 @@ async function init() {
       height: viewportHeight,
     });
 
-    const shouyeUrl = 'https://acc.yonyoucloud.com/m/shouye';
-
     // Navigate to target page
     log('Navigate to shouye page:', shouyeUrl)
     await Page.navigate({ url: shouyeUrl });
@@ -87,13 +89,16 @@ async function init() {
     /**
      * 执行脚本得到结果
      * ```js
-     * getResultValue('foo = "bar"; foo;'); // "bar"
+     * exec('foo = "bar"; foo;'); // "bar"
      * ````
      * @param  {string} evaluationStr 确保语句执行结果的类型是string，否则可能会报错
      * @return {[type]}               [description]
      */
-    async function getResultValue(evaluationStr) {
-      const { result: { value } } = await Runtime.evaluate({expression: evaluationStr});
+    async function exec(evaluationStr) {
+      const { result: { value } } = await Runtime.evaluate({
+        expression: evaluationStr,
+        returnByValue: true
+      });
       return value;
     }
 
@@ -117,8 +122,9 @@ async function init() {
       }
     }
     
-    // 从首页获取所有需要截图的报表的URL
-    let dupontUrl = await getResultValue('window.FUCK.MDupont');
+    // 获取当前用户的账簿列表
+    const accBookList = await exec('window.FUCK.accBookList');
+    log('账簿列表:', accBookList);
     
     // const dupontUrl = 'https://acc.yonyoucloud.com/fireport/ReportServer?reportlet=%2Fyonyoufi%2Foas6lr3w%2FMDupont%2FMDupont_p.cpt&__showtoolbar__=false&aid=yonyoufi&tid=oas6lr3w&userid=521fa89e-886e-4d44-9014-eb53097872d1&referAppId=yonyoufi&tenantId=oas6lr3w&op=h5&accbook=1574FCFD-89C8-4DFD-9E22-B281222D8C72';
     // const managementStatusUrl = 'https://acc.yonyoucloud.com/fireport/ReportServer?reportlet=%2Fyonyoufi%2Foas6lr3w%2FMManagementStatus%2FMManagementStatus_p.cpt&__showtoolbar__=false&aid=yonyoufi&tid=oas6lr3w&userid=521fa89e-886e-4d44-9014-eb53097872d1&referAppId=yonyoufi&tenantId=oas6lr3w&op=h5&accbook=D1C4A142-EC87-4BF0-BDD4-1FBD7D1D271A';
@@ -132,7 +138,7 @@ async function init() {
      * @param  {Number} [delay=5000] 延时截图，比如DOM加载时间，还有报表绘制动画
      * @return {[type]}              [description]
      */
-    async function takeSnapShot(url, output, delay = 2000) {
+    async function takeSnapShot(url, output, delay = 10000) {
       // Navigate to target page
       log('Navigate to target page:', url)
       await Page.navigate({ url });
@@ -158,13 +164,36 @@ async function init() {
       log('start saving snapshot:', path);
       await file.writeFile(path, buffer, 'base64');
       log('Screenshot saved');
+      log('start crop image');
+      crop(output);
     }
     
-    // 杜邦分析的动画绘制时间比较长
-    await takeSnapShot(dupontUrl, 'Dupont.png', 10000);
-    // await takeSnapShot(managementStatusUrl, 'ManagementStatus.png');
-    // await takeSnapShot(trendAnalysisUrl, 'TrendAnalysis.png');
-    // await takeSnapShot(financialDataUrl, 'FinancialData.png');
+    let idx;
+    for (idx = 0; idx < accBookList.length; idx += 1) {
+      const accBook = accBookList[idx];
+      
+      // 四张截图完成，回到首页切换账簿
+      log('回到首页', shouyeUrl);
+      await Page.navigate({ url: shouyeUrl });
+      await Page.loadEventFired();
+      log('delay: 2000');
+      await timeout(2000);
+      
+      log('切换到账簿:', accBook);
+      const { result } = await Runtime.evaluate({
+        expression: `window.FUCK.onAccBookChange('${accBook.id}');`
+      });
+      
+      const state = await exec('window.FUCK.state');
+      log('从浏览器变量空间获取到VueX状态', state)
+      log('当前账簿', state.accBookId)
+      
+      // 杜邦分析的动画绘制时间比较长
+      await takeSnapShot(state.MDupontUrl, `${state.accBookId}_MDupont.png`, 10000);
+      await takeSnapShot(state.MManagementStatusUrl, `${state.accBookId}_MManagementStatus.png`);
+      await takeSnapShot(state.MTrendAnalysisUrl, `${state.accBookId}_MTrendAnalysis.png`);
+      await takeSnapShot(state.MFinancialDataUrl, `${state.accBookId}_MFinancialData.png`);
+    }
     
     client.close();
   } catch (err) {

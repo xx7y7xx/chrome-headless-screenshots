@@ -1,17 +1,10 @@
 const Jimp = require("jimp");
-// const argv = require('minimist')(process.argv.slice(2));
-// const code = argv.code || 'Dupont';
 
-function crop(code) {
-  Jimp.read(`output/${code}.png`, function (err, image) {
+module.exports = function crop(filename) {
+  Jimp.read(`output/${filename}`, function (err, image) {
     if (err) throw err;
     image.autocrop(0.0003, false)
       // .resize(256, 256)
-      .write(`output/${code}_croped.png`);
+      .write(`output/${filename}`);
   });
 }
-
-crop('Dupont');
-crop('ManagementStatus');
-crop('TrendAnalysis');
-crop('FinancialData');
