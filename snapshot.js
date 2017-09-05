@@ -1,6 +1,7 @@
 /**
  * TODO 可以进行优化
  * - 升级到更高层的API https://github.com/GoogleChrome/puppeteer
+ * - 使用node来管理chrome进程 https://github.com/GoogleChrome/lighthouse/tree/master/chrome-launcher
  */
 
 const CDP = require('chrome-remote-interface');
