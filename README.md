@@ -1,5 +1,10 @@
 ## Using headless Chrome as an automated screenshot tool
 
+```
+npm install --registry=https://registry.npm.taobao.org
+npm start
+```
+
 This repo contains an example implementation of using headless Chrome as an automated screenshot tool on linux, which is a common use case for PhantomJS. Contributions are welcome.
 
 ### Chrome Version

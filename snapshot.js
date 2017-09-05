@@ -176,6 +176,7 @@ async function init() {
       log('回到首页', shouyeUrl);
       await Page.navigate({ url: shouyeUrl });
       await Page.loadEventFired();
+
       log('delay: 2000');
       await timeout(2000);
       
@@ -183,6 +184,10 @@ async function init() {
       const { result } = await Runtime.evaluate({
         expression: `window.FUCK.onAccBookChange('${accBook.id}');`
       });
+      
+      // 切换账簿需要向后端发请求获取新的URL地址，所以这里延迟再去获取状态。
+      log('delay: 5000');
+      await timeout(5000);
       
       const state = await exec('window.FUCK.state');
       log('从浏览器变量空间获取到VueX状态', state)
