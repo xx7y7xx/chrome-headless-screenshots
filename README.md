@@ -1,5 +1,9 @@
 ## Using headless Chrome as an automated screenshot tool
 
+新版已经使用puppeteer重新实现，[https://github.com/yyssc/ybb_snapshot](https://github.com/yyssc/ybb_snapshot)
+
+这个repo停止维护。
+
 ```
 npm install --registry=https://registry.npm.taobao.org
 npm start
