@@ -28,7 +28,7 @@ sync_files() {
   ssh_user="$3"
   rsync_src="$4"
   rsync_dest="$5"
-  rsync -arvzh --delete --progress --chmod=a+rwx \
+  rsync -arvzh --progress --chmod=a+rwx \
     --exclude='.git/' \
     -e "ssh -p $ssh_port ${SSH_OPTS} " \
     $rsync_src $ssh_user@$ssh_ip:$rsync_dest
